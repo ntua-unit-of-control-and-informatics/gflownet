@@ -23,7 +23,7 @@ from jaqpot_api_client.models.prediction_response import PredictionResponse
 class ModelService:
     def __init__(self, cfg):
         self.current_dir = Path(".").resolve()
-        cfg = "gflownet/src/gflownet/tasks/logs/run/config.yaml"
+        cfg = Path("src/gflownet/tasks/logs/run/config.yaml")
         self.cfg = OmegaConf.load(cfg)
         self.featurizer = SimpleMoleculeMolGraphFeaturizer()
         self._load_proxy()
@@ -31,11 +31,11 @@ class ModelService:
         self._load_algo()
 
     def _load_proxy(self):
-        proxy_dir = "gflownet/src/gflownet/proxy_chemprop/checkpoints/best-epoch=84-val_loss=0.06.ckpt"
+        proxy_dir = Path("src/gflownet/proxy_chemprop/checkpoints/best-epoch=84-val_loss=0.06.ckpt")
         self.proxy = load_model(proxy_dir)
 
     def _load_sampling(self):
-        model_dir = "gflownet/src/gflownet/tasks/logs/run/model_state.pt"
+        model_dir = Path("src/gflownet/tasks/logs/run/model_state.pt")
         self.temp_cond = TemperatureConditional(self.cfg)
         num_cond_dim = self.temp_cond.encoding_size()
         self.ctx = FragMolBuildingEnvContext(
