@@ -131,7 +131,7 @@ class TrajectoryBalance(GFNAlgorithm):
         assert self.ctx.has_n() or (
             self.cfg.backward_policy not in [Backward.MaxentA, Backward.GSQLA]
         ), "can't do analytical maxent/GSQL w/o knowing $n$"
-        assert self.cfg.do_predict_n or self.cfg.n_loss == NLoss.none, "`n_loss != NLoss.none` requires `do_predict_n`"
+        # assert self.cfg.do_predict_n or self.cfg.n_loss == NLoss.none, "`n_loss != NLoss.none` requires `do_predict_n`"
         self.random_action_prob = [cfg.algo.train_random_action_prob, cfg.algo.valid_random_action_prob]
 
         self.graph_sampler = GraphSampler(

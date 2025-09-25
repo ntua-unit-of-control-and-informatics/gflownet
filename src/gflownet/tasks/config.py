@@ -10,11 +10,6 @@ class SEHTaskConfig(StrictDataClass):
 
 
 @dataclass
-class LogPTaskConfig(StrictDataClass):
-    reduced_frag: bool = False
-
-
-@dataclass
 class SEHMOOTaskConfig(StrictDataClass):
     """Config for the SEHMOOTask
 
@@ -73,4 +68,3 @@ class TasksConfig(StrictDataClass):
     qm9_moo: QM9MOOTaskConfig = field(default_factory=QM9MOOTaskConfig)
     seh: SEHTaskConfig = field(default_factory=SEHTaskConfig)
     seh_moo: SEHMOOTaskConfig = field(default_factory=SEHMOOTaskConfig)
-    logp: LogPTaskConfig = field(default_factory=LogPTaskConfig)

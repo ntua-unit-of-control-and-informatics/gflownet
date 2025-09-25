@@ -1,0 +1,13 @@
+1) pip install -e . --find-links https://data.pyg.org/whl/torch-2.1.2+cpu.html
+
+2) pip install numpy==1.26.0
+
+3) cd src/gflownet/proxy
+
+4) python train.py (run the program)
+
+5) cd ../tasks
+
+6) python example.py (fix minimization or maximization inside the script)
+
+7) 
