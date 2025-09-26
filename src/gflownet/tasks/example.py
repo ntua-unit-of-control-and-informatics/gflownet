@@ -43,22 +43,30 @@ class TrajectoryBalanceTask(GFNTask):
         self.models = self._load_task_models()
         self.temperature_conditional = TemperatureConditional(cfg)
         self.num_cond_dim = self.temperature_conditional.encoding_size()
+        #####
+        #TODO: Specify the min and max reward values for the task
         self.min_logp = -13.71
         self.max_logp = 2.41
+        #####
         self.width = self.max_logp - self.min_logp
 
     def reward_transform(self, y: Union[float, Tensor]) -> ObjectProperties:
         """Transforms a target quantity y (e.g. the LUMO energy in QM9) to a positive reward scalar"""
+        #####
+        #TODO: Here specify if we want to maximize or minimize the reward
         # Here we want to minimize
         flat_r = 1 - ((y - self.min_logp) / self.width)
         # If we want to minimize
         # flat_r = (y - self.min_logp) / self.width
+        #####
         return ObjectProperties(flat_r)
 
     def _load_task_models(self):
-        # TODO: Here will need to load my model
+        #####
+        # TODO: Here will need to load the predictive model from proxy folder
         param_file = "../proxy/model_params.txt"
         model = load_proxy_to_gflow(param_file, "../proxy/best_model.pt")
+        #####
         model.to(get_worker_device())
         model = self._wrap_model(model)
         return {"predictor": model}
@@ -106,9 +114,9 @@ class SolubilityFragTrainer(StandardOnlineTrainer):
         cfg.opt.clip_grad_param = 10
         # Batch size
         cfg.algo.num_from_policy = 64
+        # Epochs
         cfg.num_training_steps = 50
-        cfg.validate_every = 250
-        # Need to output a lot of molecules to get a good estimate of the reward
+        cfg.validate_every = 250        
         cfg.num_final_gen_steps = 10
 
         cfg.algo.method = "TB"
@@ -164,8 +172,10 @@ def main():
     """Example of how this model can be run."""
 
     config = init_empty(Config())
-    # Here name the dict on which it is saved
+    #####
+    #TODO: Name of the log file
     config.log_dir = "./logs/example"
+    #####
     seed = 42
     import random
 

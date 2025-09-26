@@ -104,10 +104,14 @@ if __name__ == "__main__":
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     # ------------  Load data
+    
+    #####
+    #TODO: Give the dataset
     data_url = r"https://raw.githubusercontent.com/CesareWang/Predictors-for-15-Environmental-Endpoints/main/predictors/data/SW.csv"
     kow_data = pd.read_csv(data_url, index_col=0)
     kow_data.rename(columns={"active": "logKOW"}, inplace=True)
-
+    #####
+    
     # ------------ Create data splits with scaffold
     train_id, valid_id, test_id = random_split(frac_train=0.80, smiles=kow_data)
     train_data = kow_data.loc[train_id]
@@ -141,7 +145,10 @@ if __name__ == "__main__":
     ).to(device)
 
     # --------------- Training configs
+    ####
+    #TODO: Set the number of epochs
     epochs = 25
+    ####
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=10, verbose=True)
 
@@ -160,3 +167,9 @@ if __name__ == "__main__":
     all_preds, all_true = infer_model(model, te_loader, device)
     rmse, mae, r2 = get_metrics(all_preds, all_true)
     print(f"RMSE: {rmse}, MAE: {mae}, R2: {r2}")
+    
+    
+    
+#### Example of how to run with command line arguments
+# python src/gflownet/proxy/train.py --learning_rate 0.001 --batch_size 64 --gnn_layers 2 --gnn_channels 64 --heads 4 --mlp_layers 2 --dropout_proba 0.2
+#### By default, the above hyperparameters will be used if no arguments are provided.
