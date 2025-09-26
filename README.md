@@ -79,3 +79,16 @@ We use `tox` to run tests and linting, and `pre-commit` to run checks before com
 To ensure that these checks pass, simply run `tox -e style` and `tox run` to run linters and tests, respectively.
 
 For more information, see [Contributing](docs/contributing.md).
+
+
+### How to run the repo
+
+1) git clone https://github.com/ntua-unit-of-control-and-informatics/jaqpot-gflownet-model.git
+Before installing the dependencies its best that you create a virtual environment
+2) pip install -e . --find-links https://data.pyg.org/whl/torch-2.1.2+cpu.html
+3) pip install numpy==1.26.4
+4) cd src/gflownet/proxy
+5) To create a predictive model, run python train.py. To insert your own dataset navigate to the train.py script and modify lines 110-113. To rename the predictive model file and params, change lines 162, 96.
+6) cd ../tasks
+7) To train and save a gflownet, run example.py. Uncommnet lines 56-61 depending on minimization or maximization problem. Also for variable scaling, change 48,49. Predictive model path and parameters are changed from line 67,68. In line 177 you can change the output folder name for the gflownet model.
+8) After training run analyze_results.ipynb notebook. Change only the id (corresponds to gflownet model folder) and proxy model(contains predictive model path)
