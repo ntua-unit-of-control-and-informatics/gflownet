@@ -44,7 +44,7 @@ class TrajectoryBalanceTask(GFNTask):
         self.temperature_conditional = TemperatureConditional(cfg)
         self.num_cond_dim = self.temperature_conditional.encoding_size()
         #####
-        #TODO: Specify the min and max reward values for the task
+        # TODO: Specify the min and max reward values for the task
         self.min_logp = -13.71
         self.max_logp = 2.41
         #####
@@ -53,10 +53,10 @@ class TrajectoryBalanceTask(GFNTask):
     def reward_transform(self, y: Union[float, Tensor]) -> ObjectProperties:
         """Transforms a target quantity y (e.g. the LUMO energy in QM9) to a positive reward scalar"""
         #####
-        #TODO: Here specify if we want to maximize or minimize the reward
+        # TODO: Here specify if we want to maximize or minimize the reward
         # Here we want to minimize
         flat_r = 1 - ((y - self.min_logp) / self.width)
-        # If we want to minimize
+        # If we want to maximiize
         # flat_r = (y - self.min_logp) / self.width
         #####
         return ObjectProperties(flat_r)
@@ -116,7 +116,7 @@ class SolubilityFragTrainer(StandardOnlineTrainer):
         cfg.algo.num_from_policy = 64
         # Epochs
         cfg.num_training_steps = 50
-        cfg.validate_every = 250        
+        cfg.validate_every = 250
         cfg.num_final_gen_steps = 10
 
         cfg.algo.method = "TB"
@@ -173,7 +173,7 @@ def main():
 
     config = init_empty(Config())
     #####
-    #TODO: Name of the log file
+    # TODO: Name of the log file
     config.log_dir = "./logs/example"
     #####
     seed = 42

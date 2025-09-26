@@ -1,3 +1,5 @@
+git clone https://github.com/ntua-unit-of-control-and-informatics/jaqpot-gflownet-model.git
+
 1) pip install -e . --find-links https://data.pyg.org/whl/torch-2.1.2+cpu.html
 
 2) pip install numpy==1.26.0

@@ -13,7 +13,7 @@ num_training_steps: 50
 num_workers: 8
 hostname: john-laptop
 pickle_mp_messages: false
-git_hash: 7a6e94a
+git_hash: 71a3b7f
 overwrite_existing_exp: true
 algo:
   method: TB
