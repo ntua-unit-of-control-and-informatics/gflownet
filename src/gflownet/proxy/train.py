@@ -79,7 +79,6 @@ def data_from_loader(data, device):
 
 
 if __name__ == "__main__":
-    # ------------  Hyperparameters for tuning
     def parse_args():
         argparser = argparse.ArgumentParser(description="GNN for KOW prediction")
         argparser.add_argument("--learning_rate", type=float, default=0.001)
@@ -89,11 +88,21 @@ if __name__ == "__main__":
         argparser.add_argument("--heads", type=int, default=4)
         argparser.add_argument("--mlp_layers", type=int, default=2)
         argparser.add_argument("--dropout_proba", type=float, default=0.2)
+        argparser.add_argument(
+            "--data_url",
+            type=str,
+            default=r"https://raw.githubusercontent.com/CesareWang/Predictors-for-15-Environmental-Endpoints/main/predictors/data/SW.csv",
+        )
+        argparser.add_argument("--target_col", type=str, default="logKOW")
+        argparser.add_argument("--rename_from", type=str, default="active")
+        argparser.add_argument("--rename_to", type=str, default="logKOW")
+        argparser.add_argument("--params_out", type=str, default="model_params.txt")
+        argparser.add_argument("--best_model_out", type=str, default="best_model.pt")
         return argparser.parse_args()
 
     args = parse_args()
 
-    with open("model_params.txt", "w") as f:
+    with open(args.params_out, "w") as f:
         for key, value in vars(args).items():
             f.write(f"{key}: {value}\n")
     seed = 42
@@ -104,14 +113,12 @@ if __name__ == "__main__":
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     # ------------  Load data
-    
-    #####
-    #TODO: Give the dataset
-    data_url = r"https://raw.githubusercontent.com/CesareWang/Predictors-for-15-Environmental-Endpoints/main/predictors/data/SW.csv"
+
+    data_url = args.data_url
     kow_data = pd.read_csv(data_url, index_col=0)
-    kow_data.rename(columns={"active": "logKOW"}, inplace=True)
-    #####
-    
+    if args.rename_from and args.rename_to and args.rename_from in kow_data.columns:
+        kow_data.rename(columns={args.rename_from: args.rename_to}, inplace=True)
+
     # ------------ Create data splits with scaffold
     train_id, valid_id, test_id = random_split(frac_train=0.80, smiles=kow_data)
     train_data = kow_data.loc[train_id]
@@ -119,13 +126,16 @@ if __name__ == "__main__":
     test_data = kow_data.loc[test_id]
     # ------------ Create GNN datasets
     train_dataset = [
-        smiles2graph(Chem.MolFromSmiles(smiles), y) for smiles, y in zip(train_data["smiles"], train_data["logKOW"])
+        smiles2graph(Chem.MolFromSmiles(smiles), y)
+        for smiles, y in zip(train_data["smiles"], train_data[args.target_col])
     ]
     valid_dataset = [
-        smiles2graph(Chem.MolFromSmiles(smiles), y) for smiles, y in zip(valid_data["smiles"], valid_data["logKOW"])
+        smiles2graph(Chem.MolFromSmiles(smiles), y)
+        for smiles, y in zip(valid_data["smiles"], valid_data[args.target_col])
     ]
     test_dataset = [
-        smiles2graph(Chem.MolFromSmiles(smiles), y) for smiles, y in zip(test_data["smiles"], test_data["logKOW"])
+        smiles2graph(Chem.MolFromSmiles(smiles), y)
+        for smiles, y in zip(test_data["smiles"], test_data[args.target_col])
     ]
     # ------------ Loaders
     tr_loader, val_loader, te_loader = build_loaders(
@@ -145,10 +155,7 @@ if __name__ == "__main__":
     ).to(device)
 
     # --------------- Training configs
-    ####
-    #TODO: Set the number of epochs
     epochs = 25
-    ####
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=10, verbose=True)
 
@@ -159,7 +166,7 @@ if __name__ == "__main__":
         val_loss = eval_epoch(model, val_loader, device)
         if val_loss < best_loss:
             best_loss = val_loss
-            torch.save(model.state_dict(), f"best_model.pt")
+            torch.save(model.state_dict(), f"{args.best_model_out}")
         print(f"Epoch: {epoch}, Train Loss: {train_loss}, Val Loss: {val_loss}")
 
     torch.save(model.state_dict(), "final_model.pt")
@@ -167,9 +174,3 @@ if __name__ == "__main__":
     all_preds, all_true = infer_model(model, te_loader, device)
     rmse, mae, r2 = get_metrics(all_preds, all_true)
     print(f"RMSE: {rmse}, MAE: {mae}, R2: {r2}")
-    
-    
-    
-#### Example of how to run with command line arguments
-# python src/gflownet/proxy/train.py --learning_rate 0.001 --batch_size 64 --gnn_layers 2 --gnn_channels 64 --heads 4 --mlp_layers 2 --dropout_proba 0.2
-#### By default, the above hyperparameters will be used if no arguments are provided.
