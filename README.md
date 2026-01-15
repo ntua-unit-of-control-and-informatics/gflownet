@@ -53,7 +53,6 @@ For a gentler introduction to the library, see [Getting Started](docs/getting_st
 - [algo](src/gflownet/algo), contains GFlowNet algorithms implementations ([Trajectory Balance](https://arxiv.org/abs/2201.13259), [SubTB](https://arxiv.org/abs/2209.12782), [Flow Matching](https://arxiv.org/abs/2106.04399)), as well as some baselines. These implement how to sample trajectories from a model and compute the loss from trajectories.
 - [data](src/gflownet/data), contains dataset definitions, data loading and data sampling utilities.
 - [envs](src/gflownet/envs), contains environment classes; the base environment is agnostic to what kind of graph is being made, and context classes specify mappings from graphs to objects (e.g. molecules) and torch geometric Data.
-- [examples](docs/examples), contains simple example implementations of GFlowNet.
 - [models](src/gflownet/models), contains model definitions.
 - [tasks](src/gflownet/tasks), contains training code.
     -  [qm9](src/gflownet/tasks/qm9/qm9.py), temperature-conditional molecule sampler based on QM9's HOMO-LUMO gap data as a reward.
@@ -152,9 +151,6 @@ If you are unsure, use the CPU installation above.
   - `qm9.py`
   - `qm9_moo.py`
 
-If you installed the CPU version of PyTorch, avoid the GPU-required scripts or modify them
-to auto-detect the device.
-
 ---
 
 ### 4) Running from Visual Studio Code
@@ -201,24 +197,15 @@ python train.py   --data_url "C:\path\to\dataset.csv"   --target_col logKOW   --
 **Command-line arguments for `train.py`:**
 - `--data_url`  : Path or URL to a CSV dataset. The dataset must contain a `smiles` column.
 - `--target_col` : Name of the target column in the dataset to be predicted (e.g. `logKOW`).
-- `--learning_rate`  
-  Learning rate used by the Adam optimizer.
-- `--batch_size`  
-  Batch size for training the proxy model.
-- `--gnn_layers`  
-  Number of graph neural network layers.
-- `--gnn_channels`  
-  Hidden dimension size of the GNN layers.
-- `--heads`  
-  Number of attention heads in the graph attention layers.
-- `--mlp_layers`  
-  Number of fully connected layers after the GNN.
-- `--dropout_proba`  
-  Dropout probability used for regularization.
-- `--best_model_out`  
-  Filename where the best-performing model checkpoint is saved.
-- `--params_out`  
-  Filename where all training hyperparameters are stored for reproducibility.
+- `--best_model_out` : Filename where the best-performing model checkpoint is saved.
+- `--params_out` : Filename where all training hyperparameters are stored for reproducibility.
+- `--learning_rate` : Learning rate used by the Adam optimizer.
+- `--batch_size` : Batch size for training the proxy model.
+- `--gnn_layers` : Number of graph neural network layers.
+- `--gnn_channels` : Hidden dimension size of the GNN layers.
+- `--heads` : Number of attention heads in the graph attention layers.
+- `--mlp_layers` : Number of fully connected layers after the GNN.
+- `--dropout_proba` : Dropout probability used for regularization.
 
 ---
 
@@ -243,18 +230,11 @@ python example_inputs.py   --objective min   --min_logp -13.71   --max_logp 2.41
 ```
 
 **Command-line arguments for `example_inputs.py`:**
-
-- `--objective`  
-  Optimization direction for the reward.  
-  Use `min` to minimize the proxy output or `max` to maximize it.
-- `--min_logp`, `--max_logp`  
-  Minimum and maximum values used to scale the proxy output into a normalized reward.
-- `--param_file`  
-  Path to the proxy model parameter file generated during proxy training.
-- `--model_file`  
-  Path to the trained proxy model weights.
-- `--log_dir`  
-  Directory where GFlowNet logs, checkpoints, and generated samples are saved.
+- `--objective` : Optimization direction for the reward.  Use `min` to minimize the proxy output or `max` to maximize it.
+- `--min_logp`, `--max_logp` : Minimum and maximum values used to scale the proxy output into a normalized reward.
+- `--param_file` : Path to the proxy model parameter file generated during proxy training.
+- `--model_file` : Path to the trained proxy model weights.
+- `--log_dir` : Directory where GFlowNet logs, checkpoints, and generated samples are saved.
 
 ---
 
