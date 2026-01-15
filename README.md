@@ -81,7 +81,7 @@ To ensure that these checks pass, simply run `tox -e style` and `tox run` to run
 For more information, see [Contributing](docs/contributing.md).
 
 
-### How to run the repo
+## How to run the repo
 
 This repository is intended to be run with **Python 3.10** inside a virtual environment (recommended: Conda).
 All configuration is handled via **command-line arguments** — source files do **not** need to be edited.
@@ -106,7 +106,7 @@ inside your current directory.
 
 ---
 
-#### 2) Create and activate a virtual environment (one time only)
+### 2) Create and activate a virtual environment (one time only)
 
 The environment needs to be **created only once**.
 Every time you want to run the code, you only need to **activate** it.
@@ -120,7 +120,7 @@ Make sure the environment is activated **before running any Python commands**.
 
 ---
 
-#### 3) Install dependencies (from the repository root)
+### 3) Install dependencies (from the repository root)
 
 Always run installation commands from the repository root.
 
@@ -157,7 +157,7 @@ to auto-detect the device.
 
 ---
 
-#### 4) Running from Visual Studio Code
+### 4) Running from Visual Studio Code
 
 Before opening Visual Studio Code, **ensure that the correct environment is already activated**.
 If the environment is active when VS Code is launched, the integrated terminal will inherit it.
@@ -178,7 +178,7 @@ You do **not** need to re-activate the environment if it is already active.
 
 ---
 
-#### 5) Train a predictive (proxy) model
+### 5) Train a predictive (proxy) model
 
 Navigate explicitly to the proxy folder:
 
@@ -198,9 +198,33 @@ To use a **custom dataset or change training settings**, run:
 python train.py   --data_url "C:\path\to\dataset.csv"   --target_col logKOW   --learning_rate 0.001   --batch_size 64   --gnn_layers 2   --gnn_channels 64   --heads 4   --mlp_layers 2   --dropout_proba 0.2   --best_model_out best_model.pt   --params_out model_params.txt
 ```
 
+**Command-line arguments for `train.py`:**
+- `--data_url`  
+  Path or URL to a CSV dataset. The dataset must contain a `smiles` column.
+- `--target_col`  
+  Name of the target column in the dataset to be predicted (e.g. `logKOW`).
+- `--learning_rate`  
+  Learning rate used by the Adam optimizer.
+- `--batch_size`  
+  Batch size for training the proxy model.
+- `--gnn_layers`  
+  Number of graph neural network layers.
+- `--gnn_channels`  
+  Hidden dimension size of the GNN layers.
+- `--heads`  
+  Number of attention heads in the graph attention layers.
+- `--mlp_layers`  
+  Number of fully connected layers after the GNN.
+- `--dropout_proba`  
+  Dropout probability used for regularization.
+- `--best_model_out`  
+  Filename where the best-performing model checkpoint is saved.
+- `--params_out`  
+  Filename where all training hyperparameters are stored for reproducibility.
+
 ---
 
-#### 6) Train a GFlowNet using the proxy model
+### 6) Train a GFlowNet using the proxy model
 
 Navigate explicitly to the tasks folder:
 
@@ -220,9 +244,23 @@ To customize the optimization task and proxy model used:
 python example_inputs.py   --objective min   --min_logp -13.71   --max_logp 2.41   --param_file ../proxy/model_params.txt   --model_file ../proxy/best_model.pt   --log_dir ./logs/min_run
 ```
 
+**Command-line arguments for `example_inputs.py`:**
+
+- `--objective`  
+  Optimization direction for the reward.  
+  Use `min` to minimize the proxy output or `max` to maximize it.
+- `--min_logp`, `--max_logp`  
+  Minimum and maximum values used to scale the proxy output into a normalized reward.
+- `--param_file`  
+  Path to the proxy model parameter file generated during proxy training.
+- `--model_file`  
+  Path to the trained proxy model weights.
+- `--log_dir`  
+  Directory where GFlowNet logs, checkpoints, and generated samples are saved.
+
 ---
 
-#### 7) Analyze results
+### 7) Analyze results
 
 After training completes, open:
 
