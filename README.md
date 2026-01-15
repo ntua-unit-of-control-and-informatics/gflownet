@@ -199,10 +199,8 @@ python train.py   --data_url "C:\path\to\dataset.csv"   --target_col logKOW   --
 ```
 
 **Command-line arguments for `train.py`:**
-- `--data_url`  
-  Path or URL to a CSV dataset. The dataset must contain a `smiles` column.
-- `--target_col`  
-  Name of the target column in the dataset to be predicted (e.g. `logKOW`).
+- `--data_url`  : Path or URL to a CSV dataset. The dataset must contain a `smiles` column.
+- `--target_col` : Name of the target column in the dataset to be predicted (e.g. `logKOW`).
 - `--learning_rate`  
   Learning rate used by the Adam optimizer.
 - `--batch_size`  
