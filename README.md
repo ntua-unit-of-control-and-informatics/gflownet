@@ -83,12 +83,155 @@ For more information, see [Contributing](docs/contributing.md).
 
 ### How to run the repo
 
-1) git clone https://github.com/ntua-unit-of-control-and-informatics/jaqpot-gflownet-model.git
-Before installing the dependencies its best that you create a virtual environment
-2) pip install -e . --find-links https://data.pyg.org/whl/torch-2.1.2+cpu.html
-3) pip install numpy==1.26.4
-4) cd src/gflownet/proxy
-5) To create a predictive model, run python train.py. To insert your own dataset navigate to the train.py script and modify lines 110-113. To rename the predictive model file and params, change lines 162, 96.
-6) cd ../tasks
-7) To train and save a gflownet, run example.py. Uncommnet lines 56-61 depending on minimization or maximization problem. Also for variable scaling, change 48,49. Predictive model path and parameters are changed from line 67,68. In line 177 you can change the output folder name for the gflownet model.
-8) After training run analyze_results.ipynb notebook. Change only the id (corresponds to gflownet model folder) and proxy model(contains predictive model path)
+This repository is intended to be run with **Python 3.10** inside a virtual environment (recommended: Conda).
+All configuration is handled via **command-line arguments** — source files do **not** need to be edited.
+
+You can run all commands either from a terminal (Anaconda Prompt / PowerShell / bash)
+or from the integrated terminal in **Visual Studio Code**.
+The same rules apply in both cases.
+
+---
+
+#### 1) Clone the repository
+
+Choose a directory on your system where you want the code to live, then run:
+
+```bash
+git clone -b full-example --single-branch https://github.com/ntua-unit-of-control-and-informatics/jaqpot-gflownet-model.git
+cd jaqpot-gflownet-model
+```
+
+The repository is downloaded into a folder named `jaqpot-gflownet-model`
+inside your current directory.
+
+---
+
+#### 2) Create and activate a virtual environment (one time only)
+
+The environment needs to be **created only once**.
+Every time you want to run the code, you only need to **activate** it.
+
+```bash
+conda create -n gflownet_env python=3.10
+conda activate gflownet_env
+```
+
+Make sure the environment is activated **before running any Python commands**.
+
+---
+
+#### 3) Install dependencies (from the repository root)
+
+Always run installation commands from the repository root.
+
+**CPU-only installation (recommended default):**
+```bash
+cd path/to/jaqpot-gflownet-model
+pip install -e . --find-links https://data.pyg.org/whl/torch-2.1.2+cpu.html
+pip install numpy==1.26.4
+```
+
+**GPU installation (optional, NVIDIA GPUs only):**
+```bash
+cd path/to/jaqpot-gflownet-model
+pip install -e . --find-links https://data.pyg.org/whl/torch-2.1.2+cu121.html
+pip install numpy==1.26.4
+```
+
+Use the GPU option only if you have an NVIDIA GPU with compatible drivers.
+If you are unsure, use the CPU installation above.
+
+**GPU usage note for task examples:**
+- The following scripts **require a GPU by default** (they explicitly set `device="cuda"`):
+  - `toy_seq.py`
+  - `make_rings.py`
+- The following scripts **auto-detect** and run on CPU or GPU:
+  - `example.py`
+  - `seh_frag.py`
+  - `seh_frag_moo.py`
+  - `qm9.py`
+  - `qm9_moo.py`
+
+If you installed the CPU version of PyTorch, avoid the GPU-required scripts or modify them
+to auto-detect the device.
+
+---
+
+#### 4) Running from Visual Studio Code
+
+Before opening Visual Studio Code, **ensure that the correct environment is already activated**.
+If the environment is active when VS Code is launched, the integrated terminal will inherit it.
+
+From the repository root, with the environment activated:
+
+```bash
+cd path/to/jaqpot-gflownet-model
+code .
+```
+
+Inside VS Code:
+- Open a terminal (**Terminal → New Terminal**)
+- Verify that `gflownet_env` is active
+- Run the commands below exactly as shown
+
+You do **not** need to re-activate the environment if it is already active.
+
+---
+
+#### 5) Train a predictive (proxy) model
+
+Navigate explicitly to the proxy folder:
+
+```bash
+cd path/to/jaqpot-gflownet-model/src/gflownet/proxy
+```
+
+Train a proxy model using the default dataset and hyperparameters:
+
+```bash
+python train.py
+```
+
+To use a **custom dataset or change training settings**, run:
+
+```bash
+python train.py   --data_url "C:\path\to\dataset.csv"   --target_col logKOW   --learning_rate 0.001   --batch_size 64   --gnn_layers 2   --gnn_channels 64   --heads 4   --mlp_layers 2   --dropout_proba 0.2   --best_model_out best_model.pt   --params_out model_params.txt
+```
+
+---
+
+#### 6) Train a GFlowNet using the proxy model
+
+Navigate explicitly to the tasks folder:
+
+```bash
+cd path/to/jaqpot-gflownet-model/src/gflownet/tasks
+```
+
+Run GFlowNet training with default settings:
+
+```bash
+python example_inputs.py
+```
+
+To customize the optimization task and proxy model used:
+
+```bash
+python example_inputs.py   --objective min   --min_logp -13.71   --max_logp 2.41   --param_file ../proxy/model_params.txt   --model_file ../proxy/best_model.pt   --log_dir ./logs/min_run
+```
+
+---
+
+#### 7) Analyze results
+
+After training completes, open:
+
+```bash
+analyze_results.ipynb
+```
+
+Inside the notebook, update only:
+- the experiment ID (corresponding to the GFlowNet log directory)
+- the proxy model path used during training
+
+---
