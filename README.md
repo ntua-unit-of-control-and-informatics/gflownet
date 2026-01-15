@@ -105,7 +105,7 @@ inside your current directory.
 
 ---
 
-### 2) Create and activate a virtual environment (one time only)
+#### 2) Create and activate a virtual environment (one time only)
 
 The environment needs to be **created only once**.
 Every time you want to run the code, you only need to **activate** it.
@@ -119,7 +119,7 @@ Make sure the environment is activated **before running any Python commands**.
 
 ---
 
-### 3) Install dependencies (from the repository root)
+#### 3) Install dependencies (from the repository root)
 
 Always run installation commands from the repository root.
 
@@ -153,7 +153,7 @@ If you are unsure, use the CPU installation above.
 
 ---
 
-### 4) Running from Visual Studio Code
+#### 4) Running from Visual Studio Code
 
 Before opening Visual Studio Code, **ensure that the correct environment is already activated**.
 If the environment is active when VS Code is launched, the integrated terminal will inherit it.
@@ -174,7 +174,7 @@ You do **not** need to re-activate the environment if it is already active.
 
 ---
 
-### 5) Train a predictive (proxy) model
+#### 5) Train a predictive (proxy) model
 
 Navigate explicitly to the proxy folder:
 
@@ -209,7 +209,7 @@ python train.py   --data_url "C:\path\to\dataset.csv"   --target_col logKOW   --
 
 ---
 
-### 6) Train a GFlowNet using the proxy model
+#### 6) Train a GFlowNet using the proxy model
 
 Navigate explicitly to the tasks folder:
 
@@ -238,7 +238,7 @@ python example_inputs.py   --objective min   --min_logp -13.71   --max_logp 2.41
 
 ---
 
-### 7) Analyze results
+#### 7) Analyze results
 
 After training completes, open:
 
