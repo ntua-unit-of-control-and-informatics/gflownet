@@ -23,6 +23,17 @@ from gflownet.proxy.mol_utils import smiles2graph
 from gflownet.proxy.model import load_proxy_to_gflow
 from gflownet.algo.trajectory_balance import TBVariant, Backward
 
+import argparse
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--objective", choices=["min", "max"], default="min")
+    p.add_argument("--min_logp", type=float, default=-13.71)
+    p.add_argument("--max_logp", type=float, default=2.41)
+    p.add_argument("--param_file", default="../proxy/model_params.txt")
+    p.add_argument("--model_file", default="../proxy/best_model.pt")
+    p.add_argument("--log_dir", default="./logs/example")
+    return p.parse_args()
 
 class TrajectoryBalanceTask(GFNTask):
     """Sets up a task where the reward is computed using a proxy for the binding energy of a molecule to
@@ -37,36 +48,30 @@ class TrajectoryBalanceTask(GFNTask):
     def __init__(
         self,
         cfg: Config,
+        args,
         wrap_model: Optional[Callable[[nn.Module], nn.Module]] = None,
     ) -> None:
+        self.args = args
         self._wrap_model = wrap_model if wrap_model is not None else (lambda x: x)
         self.models = self._load_task_models()
         self.temperature_conditional = TemperatureConditional(cfg)
         self.num_cond_dim = self.temperature_conditional.encoding_size()
-        #####
-        # TODO: Specify the min and max reward values for the task
-        self.min_logp = -13.71
-        self.max_logp = 2.41
-        #####
+        self.min_logp = self.args.min_logp
+        self.max_logp = self.args.max_logp
         self.width = self.max_logp - self.min_logp
 
     def reward_transform(self, y: Union[float, Tensor]) -> ObjectProperties:
         """Transforms a target quantity y (e.g. the LUMO energy in QM9) to a positive reward scalar"""
-        #####
-        # TODO: Here specify if we want to maximize or minimize the reward
-        # Here we want to minimize
-        flat_r = 1 - ((y - self.min_logp) / self.width)
-        # If we want to maximiize
-        # flat_r = (y - self.min_logp) / self.width
-        #####
+        if self.args.objective == "min":
+            flat_r = 1 - ((y - self.min_logp) / self.width)
+        else:
+            flat_r = (y - self.min_logp) / self.width
+
         return ObjectProperties(flat_r)
 
     def _load_task_models(self):
-        #####
-        # TODO: Here will need to load the predictive model from proxy folder
-        param_file = "../proxy/model_params.txt"
-        model = load_proxy_to_gflow(param_file, "../proxy/best_model.pt")
-        #####
+        param_file = self.args.param_file
+        model = load_proxy_to_gflow(param_file, self.args.model_file)
         model.to(get_worker_device())
         model = self._wrap_model(model)
         return {"predictor": model}
@@ -101,10 +106,14 @@ class TrajectoryBalanceTask(GFNTask):
 class SolubilityFragTrainer(StandardOnlineTrainer):
     task: TrajectoryBalanceTask
 
+    def __init__(self, cfg: Config, args):
+        self.args = args
+        super().__init__(cfg)
+
     def set_default_hps(self, cfg: Config):
         cfg.hostname = socket.gethostname()
         cfg.pickle_mp_messages = False
-        cfg.num_workers = 8
+        cfg.num_workers = 0
         cfg.opt.learning_rate = 1e-3
         cfg.opt.weight_decay = 1e-8
         cfg.opt.momentum = 0.9
@@ -151,6 +160,7 @@ class SolubilityFragTrainer(StandardOnlineTrainer):
     def setup_task(self):
         self.task = TrajectoryBalanceTask(
             cfg=self.cfg,
+            args=self.args,
             wrap_model=self._wrap_for_mp,
         )
 
@@ -171,11 +181,10 @@ class SolubilityFragTrainer(StandardOnlineTrainer):
 def main():
     """Example of how this model can be run."""
 
+    args = parse_args()
+
     config = init_empty(Config())
-    #####
-    # TODO: Name of the log file
-    config.log_dir = "./logs/example"
-    #####
+    config.log_dir = args.log_dir
     seed = 42
     import random
 
@@ -185,7 +194,7 @@ def main():
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
-    trial = SolubilityFragTrainer(config)
+    trial = SolubilityFragTrainer(config, args)
     trial.run()
 
 
