@@ -26,24 +26,66 @@ from gflownet.algo.trajectory_balance import TBVariant, Backward
 import argparse
 
 def parse_args():
-    p = argparse.ArgumentParser()
-    p.add_argument("--objective", choices=["min", "max"], default="min")
-    p.add_argument("--min_logp", type=float, default=-13.71)
-    p.add_argument("--max_logp", type=float, default=2.41)
-    p.add_argument("--param_file", default="../proxy/model_params.txt")
-    p.add_argument("--model_file", default="../proxy/best_model.pt")
-    p.add_argument("--log_dir", default="./logs/example")
+    p = argparse.ArgumentParser(
+        description=(
+            "Train a fragment-based GFlowNet using a pretrained proxy model.\n\n"
+            "The proxy model (best_model.pt) is trained separately using train.py "
+            "and predicts a molecular property of interest. This script uses the "
+            "proxy predictions to define the reward and trains a GFlowNet using "
+            "Trajectory Balance.\n\n"
+            "Use --objective to control whether the property is minimized or maximized, "
+            "and --min_logp / --max_logp to rescale the proxy output to a valid reward range."
+        )
+    )
+    p.add_argument(
+        "--objective",
+        choices=["min", "max"],
+        default="min",
+        help="Optimization direction for the proxy-predicted property (min or max).",
+    )
+    p.add_argument(
+        "--min_logp",
+        type=float,
+        default=-13.71,
+        help="Minimum expected value of the proxy prediction, used for reward scaling.",
+    )
+    p.add_argument(
+        "--max_logp",
+        type=float,
+        default=2.41,
+        help="Maximum expected value of the proxy prediction, used for reward scaling.",
+    )
+    p.add_argument(
+        "--param_file",
+        default="../proxy/model_params.txt",
+        help="Path to the proxy model parameter file produced by train.py.",
+    )
+    p.add_argument(
+        "--model_file",
+        default="../proxy/best_model.pt",
+        help="Path to the trained proxy model weights.",
+    )
+    p.add_argument(
+        "--log_dir",
+        default="./logs/example",
+        help="Output directory where GFlowNet training logs and checkpoints are saved.",
+    )
     return p.parse_args()
 
+
 class TrajectoryBalanceTask(GFNTask):
-    """Sets up a task where the reward is computed using a proxy for the binding energy of a molecule to
-    Soluble Epoxide Hydrolases.
+    """ Sets up a fragment-based GFlowNet task where the reward is computed using
+        a pretrained proxy model loaded from `best_model.pt`.
 
-    The proxy is pretrained, and obtained from the original GFlowNet paper, see `gflownet.models.bengio2021flow`.
+        Molecules are constructed fragment-by-fragment using the fragment vocabulary
+        and environment dynamics introduced in Bengio et al. (2021). The proxy model
+        is trained separately using `train.py` on a user-defined dataset and predicts
+        a molecular property of interest.
 
-    This setup essentially reproduces the results of the Trajectory Balance paper when using the TB
-    objective, or of the original paper when using Flow Matching.
+        The predicted property is used to define the reward signal, and training is
+        performed using standard GFlowNet objectives such as Trajectory Balance.
     """
+
 
     def __init__(
         self,
@@ -103,7 +145,7 @@ class TrajectoryBalanceTask(GFNTask):
         return ObjectProperties(preds), is_valid
 
 
-class SolubilityFragTrainer(StandardOnlineTrainer):
+class FragmentGFlowNetTrainer(StandardOnlineTrainer):
     task: TrajectoryBalanceTask
 
     def __init__(self, cfg: Config, args):
@@ -194,7 +236,7 @@ def main():
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
-    trial = SolubilityFragTrainer(config, args)
+    trial = FragmentGFlowNetTrainer(config, args)
     trial.run()
 
 
