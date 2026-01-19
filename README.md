@@ -188,6 +188,11 @@ Train a proxy model using the default dataset and hyperparameters:
 python train.py
 ```
 
+To inspect all available command-line options and dataset requirements, run:
+```bash
+python train.py --help
+```
+
 To use a **custom dataset or change training settings**, run:
 
 ```bash
@@ -221,6 +226,11 @@ Run GFlowNet training with default settings:
 
 ```bash
 python example.py
+```
+
+To inspect all available optimization and proxy-related options, run:
+```bash
+python example.py --help
 ```
 
 To customize the optimization task and proxy model used:
