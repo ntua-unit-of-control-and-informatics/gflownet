@@ -117,6 +117,20 @@ conda activate gflownet_env
 
 Make sure the environment is activated **before running any Python commands**.
 
+> **Optional**: If you plan to run the analysis notebook (`analyze_results.ipynb`) in
+**Visual Studio Code or Jupyter**, you need to install `ipykernel`
+**once for this environment**.
+
+With the environment activated:
+
+```bash
+conda activate gflownet_env
+conda install ipykernel
+```
+This step is required only once per environment.
+Afterwards, gflownet_env will be available as a selectable Jupyter kernel
+in VS Code and other notebook interfaces.
+
 ---
 
 #### 3) Install dependencies (from the repository root)
@@ -255,6 +269,8 @@ After training completes, open:
 ```bash
 analyze_results.ipynb
 ```
+
+> Make sure the notebook kernel is set to `gflownet_env (Python 3.10)`.
 
 Inside the notebook, update only:
 - the experiment ID (corresponding to the GFlowNet log directory)
