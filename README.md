@@ -263,7 +263,7 @@ python example.py   --objective min   --min_logp -13.71   --max_logp 2.41   --pa
 
 #### 7) Analyze results
 
-After training completes, open:
+After training completes, go to "path/to/jaqpot-gflownet-model" and open:
 
 ```bash
 analyze_results.ipynb
@@ -275,4 +275,14 @@ Inside the notebook, update only:
 - the experiment ID (corresponding to the GFlowNet log directory)
 - the proxy model path used during training
 
+> To run the notebook on JupyterLab instead of VS code, first make sure you have installed jupyterlab inside the environment:
+> ```bash
+> conda activate gflownet_env
+> conda install jupyterlab
+> ```
+> You only need to install this once. To open jupyter lab inside the enviroment just type:
+> ```bash
+> jupyter lab
+>```
+> Open analyze_results.ipynb and select the gflownet_env kernel.
 ---
