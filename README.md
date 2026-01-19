@@ -220,13 +220,13 @@ cd path/to/jaqpot-gflownet-model/src/gflownet/tasks
 Run GFlowNet training with default settings:
 
 ```bash
-python example_inputs.py
+python example.py
 ```
 
 To customize the optimization task and proxy model used:
 
 ```bash
-python example_inputs.py   --objective min   --min_logp -13.71   --max_logp 2.41   --param_file ../proxy/model_params.txt   --model_file ../proxy/best_model.pt   --log_dir ./logs/min_run
+python example.py   --objective min   --min_logp -13.71   --max_logp 2.41   --param_file ../proxy/model_params.txt   --model_file ../proxy/best_model.pt   --log_dir ./logs/min_run
 ```
 
 **Command-line arguments for `example_inputs.py`:**
