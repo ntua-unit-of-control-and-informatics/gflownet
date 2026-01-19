@@ -270,7 +270,7 @@ After training completes, open:
 analyze_results.ipynb
 ```
 
-> Make sure the notebook kernel is set to `gflownet_env (Python 3.10)`.
+Make sure the notebook kernel is set to `gflownet_env (Python 3.10)`.
 
 Inside the notebook, update only:
 - the experiment ID (corresponding to the GFlowNet log directory)
