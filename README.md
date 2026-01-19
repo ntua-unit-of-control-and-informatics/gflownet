@@ -279,7 +279,8 @@ Inside the notebook, update only:
 > ```bash
 > conda activate gflownet_env
 > conda install jupyterlab
-> conda install -c conda-forge ipywidgets
+> conda install -c conda-forge matplotlib ipywidgets
+> pip install matplotlib
 > ```
 > You only need to install this once. To open jupyter lab inside the enviroment just type:
 > ```bash
