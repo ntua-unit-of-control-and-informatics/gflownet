@@ -80,7 +80,16 @@ def data_from_loader(data, device):
 
 if __name__ == "__main__":
     def parse_args():
-        argparser = argparse.ArgumentParser(description="GNN for KOW prediction")
+        argparser = argparse.ArgumentParser(
+            description=(
+                "Train a graph neural network proxy model on a molecular dataset.\n\n"
+                "Dataset requirements:\n"
+                "- A column containing molecular SMILES strings (named 'smiles').\n"
+                "- A target property column to be predicted (e.g. logKOW).\n"
+                "- If the target column is not present, an existing column can be renamed "
+                "to the target name using --rename_from and --rename_to."
+            )
+        )
         argparser.add_argument("--learning_rate", type=float, default=0.001)
         argparser.add_argument("--batch_size", type=int, default=64)
         argparser.add_argument("--gnn_layers", type=int, default=2)
@@ -92,13 +101,30 @@ if __name__ == "__main__":
             "--data_url",
             type=str,
             default=r"https://raw.githubusercontent.com/CesareWang/Predictors-for-15-Environmental-Endpoints/main/predictors/data/SW.csv",
+            help="Path or URL to a CSV dataset containing SMILES and target property columns."
         )
-        argparser.add_argument("--target_col", type=str, default="logKOW")
-        argparser.add_argument("--rename_from", type=str, default="active")
-        argparser.add_argument("--rename_to", type=str, default="logKOW")
+        argparser.add_argument(
+            "--target_col",
+            type=str,
+            default="logKOW",
+            help="Name of the target property column used for training."
+        )
+        argparser.add_argument(
+            "--rename_from",
+            type=str,
+            default="active",
+            help="Optional: existing column name to be renamed to the target column."
+        )
+        argparser.add_argument(
+            "--rename_to",
+            type=str,
+            default="logKOW",
+            help="Name of the target column after renaming."
+        )
         argparser.add_argument("--params_out", type=str, default="model_params.txt")
         argparser.add_argument("--best_model_out", type=str, default="best_model.pt")
         return argparser.parse_args()
+
 
     args = parse_args()
 
