@@ -261,19 +261,39 @@ python example.py   --objective min   --min_logp -13.71   --max_logp 2.41   --pa
 
 ---
 
-#### 7) Analyze results
+#### 7) Analyze results (interactive notebook)
 
-After training completes, go to "path/to/jaqpot-gflownet-model" and open:
+After GFlowNet training completes, navigate back to the repository root and open:
 
 ```bash
 analyze_results.ipynb
 ```
 
+This notebook provides an interactive interface to:
+
+- load a trained GFlowNet run,
+- generate new molecular designs,
+- visualize results (tables, plots, molecule drawings),
+- export generated molecules to CSV.
+
+All inputs are provided through widgets — no source code edits are required.
+
 >Make sure the notebook kernel is set to `gflownet_env (Python 3.10)`.
 
-Inside the notebook, update only:
-- the experiment ID (corresponding to the GFlowNet log directory)
-- the proxy model path used during training
+Inside the notebook you will find:
+- input fields for:
+  - GFlowNet log ID (training run to analyze),
+  - proxy model parameter file,
+  - proxy model weights,
+  - number of molecules to generate,
+  - number of sampling rounds,
+  - random seed,
+- a Run generation button with status feedback,
+- interactive plots 
+- a molecule viewer with dropdown selection,
+- a Download CSV button to export generated designs.
+
+The notebook is fully self-contained and designed for exploration, evaluation, and visualization of trained GFlowNet models.
 
 > To run the notebook on JupyterLab instead of VS code, first make sure you have installed jupyterlab inside the environment:
 > ```bash
@@ -282,9 +302,9 @@ Inside the notebook, update only:
 > conda install -c conda-forge matplotlib ipywidgets
 > pip install matplotlib
 > ```
-> You only need to install this once. To open jupyter lab inside the enviroment just type:
+> You only need to install this once. Then launch:
 > ```bash
 > jupyter lab
 >```
-> Open analyze_results.ipynb and select the gflownet_env kernel.
+> Open analyze_results.ipynb and use the preselected kernel.
 ---
