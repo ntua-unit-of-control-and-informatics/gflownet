@@ -274,7 +274,7 @@ After running all cells once, the notebook allows you to:
 - load a completed GFlowNet training run (via log ID),
 - specify proxy model parameters and weights,
 - sample new molecular designs from the trained policy,
-- visualize results through tables, plots, and molecule renderings,
+- visualize results through molecule renderings, and summary statistics,
 - export generated molecules and associated properties to CSV.
 
 Make sure the notebook kernel is set to `gflownet_env (Python 3.10)`.
