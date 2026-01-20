@@ -268,31 +268,16 @@ After GFlowNet training completes, navigate back to the repository root and open
 analyze_results.ipynb
 ```
 
-This notebook provides an interactive interface to:
+This notebook provides a widget-based interactive interface for analyzing trained GFlowNet runs.
+All interaction is handled through Jupyter widgets — no source code edits are required.
+After running all cells once, the notebook allows you to:
+- load a completed GFlowNet training run (via log ID),
+- specify proxy model parameters and weights,
+- sample new molecular designs from the trained policy,
+- visualize results through tables, plots, and molecule renderings,
+- export generated molecules and associated properties to CSV.
 
-- load a trained GFlowNet run,
-- generate new molecular designs,
-- visualize results (tables, plots, molecule drawings),
-- export generated molecules to CSV.
-
-All inputs are provided through widgets — no source code edits are required.
-
->Make sure the notebook kernel is set to `gflownet_env (Python 3.10)`.
-
-Inside the notebook you will find:
-- input fields for:
-  - GFlowNet log ID (training run to analyze),
-  - proxy model parameter file,
-  - proxy model weights,
-  - number of molecules to generate,
-  - number of sampling rounds,
-  - random seed,
-- a Run generation button with status feedback,
-- interactive plots 
-- a molecule viewer with dropdown selection,
-- a Download CSV button to export generated designs.
-
-The notebook is fully self-contained and designed for exploration, evaluation, and visualization of trained GFlowNet models.
+Make sure the notebook kernel is set to `gflownet_env (Python 3.10)`.
 
 > To run the notebook on JupyterLab instead of VS code, first make sure you have installed jupyterlab inside the environment:
 > ```bash
