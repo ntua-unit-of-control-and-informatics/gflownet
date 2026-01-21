@@ -100,13 +100,14 @@ if __name__ == "__main__":
         argparser.add_argument(
             "--data_url",
             type=str,
-            default=r"https://raw.githubusercontent.com/CesareWang/Predictors-for-15-Environmental-Endpoints/main/predictors/data/SW.csv",
+            default=r"https://raw.githubusercontent.com/CesareWang/Predictors-for-15-Environmental-Endpoints/refs/heads/main/predictors/data/FBC.csv",
+            # or path to your own dataset folder : "C:\path\to\dataset.csv" 
             help="Path or URL to a CSV dataset containing SMILES and target property columns."
         )
         argparser.add_argument(
             "--target_col",
             type=str,
-            default="logKOW",
+            default="logBCF", # bioconcentration factor
             help="Name of the target property column used for training."
         )
         argparser.add_argument(
@@ -118,7 +119,7 @@ if __name__ == "__main__":
         argparser.add_argument(
             "--rename_to",
             type=str,
-            default="logKOW",
+            default="logBCF", # bioconcentration factor
             help="Name of the target column after renaming."
         )
         argparser.add_argument("--params_out", type=str, default="model_params.txt")
