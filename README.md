@@ -188,13 +188,25 @@ You do **not** need to re-activate the environment if it is already active.
 
 #### 5) Train a predictive (proxy) model
 
+The proxy model can be trained on any CSV dataset (local file or raw GitHub URL)
+containing molecular SMILES and a target property column.
+
+For demonstration purposes, this repository uses datasets from the
+**Predictors for 15 Environmental Endpoints** project:
+https://github.com/CesareWang/Predictors-for-15-Environmental-Endpoints/tree/main
+
+In the default demo configuration, the proxy is trained on the **FBC.csv** dataset
+and predicts **logBCF (Bioconcentration Factor)**, which quantifies the tendency of
+a chemical to accumulate in organisms relative to water. The proxy output is used
+as a scalar reward during GFlowNet training.
+
 Navigate explicitly to the proxy folder:
 
 ```bash
 cd path/to/jaqpot-gflownet-model/src/gflownet/proxy
 ```
 
-Train a proxy model using the default dataset and hyperparameters:
+Train a proxy model using the default demo dataset and hyperparameters:
 
 ```bash
 python train.py
@@ -239,6 +251,10 @@ Run GFlowNet training with default settings:
 ```bash
 python example.py
 ```
+
+By default, GFlowNet training uses the proxy-predicted logBCF as the reward and is
+configured to **minimize** this value, encouraging the generation of molecules
+with reduced bioconcentration potential.
 
 To inspect all available optimization and proxy-related options, run:
 ```bash
