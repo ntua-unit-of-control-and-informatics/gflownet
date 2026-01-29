@@ -55,7 +55,7 @@ For a gentler introduction to the library, see [Getting Started](docs/getting_st
 - [envs](src/gflownet/envs), contains environment classes; the base environment is agnostic to what kind of graph is being made, and context classes specify mappings from graphs to objects (e.g. molecules) and torch geometric Data.
 - [models](src/gflownet/models), contains model definitions.
 - [tasks](src/gflownet/tasks), contains training code.
-    -  [qm9](src/gflownet/tasks/qm9/qm9.py), temperature-conditional molecule sampler based on QM9's HOMO-LUMO gap data as a reward.
+    -  [qm9](src/gflownet/tasks/qm9.py), temperature-conditional molecule sampler based on QM9's HOMO-LUMO gap data as a reward.
     -  [seh_frag](src/gflownet/tasks/seh_frag.py), reproducing Bengio et al. 2021, fragment-based molecule design targeting the sEH protein
     -  [seh_frag_moo](src/gflownet/tasks/seh_frag_moo.py), same as the above, but with multi-objective optimization (incl. QED, SA, and molecule weight objectives).
 - [utils](src/gflownet/utils), contains utilities (multiprocessing, metrics, conditioning).
@@ -144,7 +144,7 @@ conda install -c conda-forge ipykernel ipywidgets matplotlib
 ```
 This step is required only once per environment.
 
-> Note: If you plan to run the analysis notebook (`analyze_results.ipynb`) in JupyterLab
+> Note: If you plan to run the analysis notebook [(`analyze_results.ipynb`)](analyze_results.ipynb) in JupyterLab
 instead of VS Code, you can additionally install:
 > ```bash
 > conda install jupyterlab
