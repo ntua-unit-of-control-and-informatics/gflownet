@@ -248,7 +248,7 @@ To use a **custom dataset or change training settings**, run:
 python train.py   --data_url "C:\path\to\dataset.csv"   --target_col logKOW   --learning_rate 0.001   --batch_size 64   --gnn_layers 2   --gnn_channels 64   --heads 4   --mlp_layers 2   --dropout_proba 0.2   --best_model_out best_model.pt   --params_out model_params.txt
 ```
 
-**Command-line arguments for `train.py`:**
+**Command-line arguments for [train.py](src/gflownet/proxy/train.py):**
 - `--data_url`  : Path or URL to a CSV dataset. The dataset must contain a `smiles` column.
 - `--target_col` : Name of the target column in the dataset to be predicted (e.g. `logKOW`).
 - `--best_model_out` : Filename where the best-performing model checkpoint is saved.
@@ -292,7 +292,7 @@ To customize the optimization task and proxy model used:
 python example.py   --objective min   --min_logp -13.71   --max_logp 2.41   --param_file ../proxy/model_params.txt   --model_file ../proxy/best_model.pt   --log_dir ./logs/min_run
 ```
 
-**Command-line arguments for `example_inputs.py`:**
+**Command-line arguments for [example.py](src/gflownet/tasks/example.py):**
 - `--objective` : Optimization direction for the reward.  Use `min` to minimize the proxy output or `max` to maximize it.
 - `--min_logp`, `--max_logp` : Minimum and maximum values used to scale the proxy output into a normalized reward.
 - `--param_file` : Path to the proxy model parameter file generated during proxy training.
