@@ -131,7 +131,32 @@ in VS Code and other notebook interfaces.
 
 ---
 
-#### 3) Install dependencies (from the repository root)
+3) Install environment-level tools (recommended before project dependencies)
+
+Before installing the project dependencies, install the basic tools required for
+running scripts, notebooks, and visualizations. These packages are needed
+regardless of whether you work in VS Code, Jupyter, or another interface.
+
+With the environment activated, run:
+```bash
+conda install git
+conda install -c conda-forge ipykernel ipywidgets matplotlib
+```
+This step is required only once per environment.
+
+> Note: If you plan to run the analysis notebook (`analyze_results.ipynb`) in JupyterLab
+instead of VS Code, you can additionally install:
+> ```bash
+> conda install jupyterlab
+> ```
+> Then launch:
+> ```bash
+> jupyter lab
+>```
+
+---
+
+#### 4) Install dependencies (from the repository root)
 
 Always run installation commands from the repository root.
 
@@ -165,7 +190,7 @@ If you are unsure, use the CPU installation above.
 
 ---
 
-#### 4) Running from Visual Studio Code
+#### 5) Running from Visual Studio Code
 
 Before opening Visual Studio Code, **ensure that the correct environment is already activated**.
 If the environment is active when VS Code is launched, the integrated terminal will inherit it.
@@ -186,7 +211,7 @@ You do **not** need to re-activate the environment if it is already active.
 
 ---
 
-#### 5) Train a predictive (proxy) model
+#### 6) Train a predictive (proxy) model
 
 The proxy model can be trained on any CSV dataset (local file or raw GitHub URL)
 containing molecular SMILES and a target property column.
@@ -238,7 +263,7 @@ python train.py   --data_url "C:\path\to\dataset.csv"   --target_col logKOW   --
 
 ---
 
-#### 6) Train a GFlowNet using the proxy model
+#### 7) Train a GFlowNet using the proxy model
 
 Navigate explicitly to the tasks folder:
 
@@ -276,7 +301,7 @@ python example.py   --objective min   --min_logp -13.71   --max_logp 2.41   --pa
 
 ---
 
-#### 7) Analyze results (interactive notebook)
+#### 8) Analyze results (interactive notebook)
 
 After GFlowNet training completes, navigate back to the repository root and open:
 
@@ -295,16 +320,4 @@ After running all cells once, the notebook allows you to:
 
 Make sure the notebook kernel is set to `gflownet_env (Python 3.10)`.
 
-> To run the notebook on JupyterLab instead of VS code, first make sure you have installed jupyterlab inside the environment:
-> ```bash
-> conda activate gflownet_env
-> conda install jupyterlab
-> conda install -c conda-forge matplotlib ipywidgets
-> pip install matplotlib
-> ```
-> You only need to install this once. Then launch:
-> ```bash
-> jupyter lab
->```
-> Open analyze_results.ipynb and use the preselected kernel.
 ---
