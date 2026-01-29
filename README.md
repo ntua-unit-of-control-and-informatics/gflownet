@@ -117,7 +117,7 @@ conda activate gflownet_env
 
 Make sure the environment is activated **before running any Python commands**.
 
-> **Optional**: If you plan to run the analysis notebook (`analyze_results.ipynb`) in
+> **Optional**: If you plan to run the analysis notebook ([analyze_results.ipynb](analyze_results.ipynb)) in
 **Visual Studio Code or Jupyter**, you need to install `ipykernel`
 **once for this environment**.
 >
@@ -144,7 +144,7 @@ conda install -c conda-forge ipykernel ipywidgets matplotlib
 ```
 This step is required only once per environment.
 
-> Note: If you plan to run the analysis notebook [(`analyze_results.ipynb`)](analyze_results.ipynb) in JupyterLab
+> Note: If you plan to run the analysis notebook ([analyze_results.ipynb](analyze_results.ipynb)) in JupyterLab
 instead of VS Code, you can additionally install:
 > ```bash
 > conda install jupyterlab
